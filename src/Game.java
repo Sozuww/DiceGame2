@@ -3,126 +3,93 @@ import java.util.Scanner;
 
 public class Game {
 
-    public static final int maxHandValue = 21;
-    private Image[] images;
-    private Viewer window;
+    private static final int MAX_HAND_VALUE = 21;
+    private final Viewer window;
+    private final Scanner scanner;
+    private int gameState;
 
-
-    public Game()
-    {
+    public Game() {
         this.window = new Viewer(this);
+        this.scanner = new Scanner(System.in);
     }
 
-    public static boolean checkStatus(boolean playing, int playerHand)
-    {
-        if(playerHand > maxHandValue)
-        {
+    public static boolean checkStatus(int playerHand) {
+        if (playerHand > MAX_HAND_VALUE) {
             System.out.println("Bust! You lose");
-            playing = false;
-        }
-
-        else if (playerHand == maxHandValue)
-        {
+            return false;
+        } else if (playerHand == MAX_HAND_VALUE) {
             System.out.println("21! You won!");
-            playing = false;
+            return false;
         }
-
-        return playing;
-
+        return true;
     }
-    public void GameState(Player player)
-    {
+
+    public void displayGameState(Player player) {
         System.out.println("\n\t--- Current Game State ---");
         System.out.println("\t     Player's hand: " + player.getHand());
-        System.out.println("\t     Dealers's hand: ▒▒");
+        System.out.println("\t     Dealer's hand: ▒▒");
         System.out.println("\t----------------------------\n");
     }
 
-    public void finalGameState(Player player, Dealer dealer)
-    {
+    public void displayFinalGameState(Player player, Dealer dealer) {
         System.out.println("\n\t---  Final Game State  ---");
         System.out.println("\t     Player's hand: " + player.getHand());
-        System.out.println("\t     Dealers's hand: " + dealer.getHand());
+        System.out.println("\t     Dealer's hand: " + dealer.getHand());
         System.out.println("\t----------------------------\n\n");
     }
 
-    public static void main(String[] args) {
-        Player p1 = new Player();
-        Scanner scanner = new Scanner(System.in);
-
-        String play = p1.getPlayInput();
-
-        while (!play.equals("PLAY")) {
-            play = p1.getPlayInput();
+    private int getPlayerChoice() {
+        int choice;
+        while (true) {
+            System.out.print("Do you want to hit? (1 for yes or 2 for no)\n");
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                if (choice == 1 || choice == 2) {
+                    return choice;
+                }
+            }
+            System.out.println("Invalid Choice. Please enter (1 for yes or 2 for no)\n");
+            scanner.nextLine(); // Clear invalid input
         }
+    }
 
-        int difficulty = p1.getDifficulty();
-        Dealer theDealer = new Dealer(difficulty);
+    public void startGame() {
+        Player player = new Player();
+        Dealer dealer = new Dealer(player.getDifficulty());
 
-        Game game = new Game();
+        while (!player.getPlayInput().equals("PLAY")) {
+            // Loop until player inputs "PLAY"
+        }
 
         boolean playing = true;
         int playerHand = 0;
-        int choice;
 
         while (playing) {
-            int dealerHand = theDealer.getHand();
-
-            game.GameState(p1);
-
-            do {
-
-                System.out.print("Do you want to hit? (1 for yes or 2 for no)\n");
-                if (scanner.hasNextInt())
-                {
-                    choice = scanner.nextInt();
-                    if (choice == 1 || choice == 2)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        System.out.println("Invalid Choice. Please enter (1 for yes or 2 for no)\n");
-                    }
-                }
-
-
-                else {
-                    System.out.println("Invalid Choice. Please enter (1 for yes or 2 for no)");
-                    scanner.next();
-
-                }
-            } while (true);
-
-            if (choice == 1) {
-                playerHand = p1.Hit();
-                playing = checkStatus(playing, playerHand);
-            }
-
-            else {
+            displayGameState(player);
+            if (getPlayerChoice() == 1) {
+                playerHand = player.Hit();
+                playing = checkStatus(playerHand);
+            } else {
                 playing = false;
-
-                game.finalGameState(p1, theDealer);
-
-                if (playerHand < dealerHand)
-                {
-                    System.out.println("You lost. Good luck next time");
-                }
-
-                else if (playerHand == dealerHand)
-                {
-                    System.out.println("You tied! Good luck next time");
-                }
-
-                else
-                {
-                    System.out.println("You won! Congrats");
-                }
-
+                displayFinalGameState(player, dealer);
+                determineWinner(playerHand, dealer.getHand());
             }
         }
-
-
     }
 
+    private void determineWinner(int playerHand, int dealerHand) {
+        if (playerHand > MAX_HAND_VALUE) {
+            System.out.println("You busted! Dealer wins.");
+        } else if (playerHand < dealerHand) {
+            System.out.println("You lost. Good luck next time");
+        } else if (playerHand == dealerHand) {
+            System.out.println("You tied! Good luck next time");
+        } else {
+            System.out.println("You won! Congrats");
+        }
+    }
+
+    public static void main(String[] args) {
+        new Game().startGame();
+    }
 }

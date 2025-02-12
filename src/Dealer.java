@@ -3,6 +3,8 @@ public class Dealer {
     private int hand;
     private final int random = (int) (Math.random() * 4);
 
+    private final int MAX_HAND_VALUE = 21;
+
     public Dealer(int diff)
     {
 
@@ -43,7 +45,7 @@ public class Dealer {
         while (hand < (12 + random))
         {
             hand += Die.drawCard();
-            if (hand > Game.maxHandValue)
+            if (hand > MAX_HAND_VALUE)
             {
                 return 22;
             }
@@ -57,7 +59,7 @@ public class Dealer {
         while (hand < (17 + random))
         {
             hand += Die.drawCard();
-            if (hand > Game.maxHandValue)
+            if (hand > MAX_HAND_VALUE)
             {
                 hand = 0;
             }

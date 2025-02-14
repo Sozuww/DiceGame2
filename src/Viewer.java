@@ -4,8 +4,8 @@ import java.awt.*;
 public class Viewer extends JFrame {
 
     private Image[] images;
-    private Image homepage;
-    private Image gameplay;
+    private Image homePage;
+    private Image gamePlay;
     private Image loss;
     private Image win;
 
@@ -30,10 +30,12 @@ public class Viewer extends JFrame {
         images[11] = new ImageIcon("resources/die/REDIE6.png").getImage();
 
         // Background Images
-        Image homepage = new ImageIcon("resources/homepage.png").getImage();
-        Image gameplay = new ImageIcon("resources/gameplay.png").getImage();
-        Image win = new ImageIcon("resources/youwin.png").getImage();
-        Image loss = new ImageIcon("resources/youlose.png").getImage();
+        homePage = new ImageIcon("resources/homepage.png").getImage();
+        homePage = homePage.getScaledInstance(960, 540, Image.SCALE_SMOOTH);
+
+        gamePlay = new ImageIcon("resources/gameplay.png").getImage();
+        win = new ImageIcon("resources/youwin.png").getImage();
+        loss = new ImageIcon("resources/youlose.png").getImage();
 
 
         this.game = game;
@@ -46,15 +48,22 @@ public class Viewer extends JFrame {
     
     public void paint(Graphics g)
     {
-        super.paint(g);
-        g.drawImage(, 0, 0, this);
+
+        if (Game.getGameState() == 0)
+        {
+            // Homescreen image
+            g.drawImage(homePage, 0, 0, this);
+        }
+
+        else if (Game.getGameState() == 1)
+        {
+            g.drawImage(gamePlay, 0, 0, this);
+        }
+
+
 
 
 
     }
 
-    private void openingImage()
-    {
-
-    }
 }

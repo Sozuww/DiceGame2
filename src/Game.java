@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.util.Scanner;
 
 public class Game {
@@ -6,11 +5,12 @@ public class Game {
     private static final int MAX_HAND_VALUE = 21;
     private final Viewer window;
     private final Scanner scanner;
-    private int gameState;
+    private static int gameState;
 
     public Game() {
         this.window = new Viewer(this);
         this.scanner = new Scanner(System.in);
+        gameState = 0;
     }
 
     public static boolean checkStatus(int playerHand) {
@@ -61,6 +61,7 @@ public class Game {
             // Loop until player inputs "PLAY"
         }
 
+        gameState = 1;
         boolean playing = true;
         int playerHand = 0;
 
@@ -71,6 +72,7 @@ public class Game {
                 playing = checkStatus(playerHand);
             } else {
                 playing = false;
+                gameState = 2;
                 displayFinalGameState(player, dealer);
                 determineWinner(playerHand, dealer.getHand());
             }
@@ -87,6 +89,10 @@ public class Game {
         } else {
             System.out.println("You won! Congrats");
         }
+    }
+
+    public static int getGameState() {
+        return gameState;
     }
 
     public static void main(String[] args) {

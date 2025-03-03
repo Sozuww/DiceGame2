@@ -6,6 +6,8 @@ public class Game {
     private final Viewer window;
     private final Scanner scanner;
     private static int gameState;
+    private int roll1;
+    private int roll2;
 
     public Game() {
         this.window = new Viewer(this);
@@ -16,9 +18,11 @@ public class Game {
     public static boolean checkStatus(int playerHand) {
         if (playerHand > MAX_HAND_VALUE) {
             System.out.println("Bust! You lose");
+            gameState = 2;
             return false;
         } else if (playerHand == MAX_HAND_VALUE) {
             System.out.println("21! You won!");
+            gameState = 3;
             return false;
         }
         return true;
@@ -32,6 +36,8 @@ public class Game {
     }
 
     public void displayFinalGameState(Player player, Dealer dealer) {
+        gameState = 3;
+        window.updateView();
         System.out.println("\n\t---  Final Game State  ---");
         System.out.println("\t     Player's hand: " + player.getHand());
         System.out.println("\t     Dealer's hand: " + dealer.getHand());
@@ -54,42 +60,62 @@ public class Game {
     }
 
     public void startGame() {
+
         Player player = new Player();
         Dealer dealer = new Dealer(player.getDifficulty());
 
-        while (!player.getPlayInput().equals("PLAY")) {
+        while (!player.getPlayInput().equals("PLAY"))
+        {
             // Loop until player inputs "PLAY"
         }
 
         gameState = 1;
+        window.updateView(1, 1);
         boolean playing = true;
-        int playerHand = 0;
+
 
         while (playing) {
             displayGameState(player);
             if (getPlayerChoice() == 1) {
-                playerHand = player.Hit();
-                playing = checkStatus(playerHand);
+                player.Hit();
+                roll1 = Player.getLastRoll();
+                player.Hit();
+                roll2 = Player.getLastRoll();
+                window.updateView(roll1, roll2);
+                playing = checkStatus(player.getHand());
+
             } else {
                 playing = false;
                 gameState = 2;
                 displayFinalGameState(player, dealer);
-                determineWinner(playerHand, dealer.getHand());
+                determineWinner(player.getHand(), dealer.getHand());
             }
         }
+
     }
 
-    private void determineWinner(int playerHand, int dealerHand) {
-        if (playerHand > MAX_HAND_VALUE) {
-            System.out.println("You busted! Dealer wins.");
-        } else if (playerHand < dealerHand) {
+    private void determineWinner(int playerHand, int dealerHand)
+    {
+        if (playerHand > MAX_HAND_VALUE || playerHand < dealerHand)
+        {
             System.out.println("You lost. Good luck next time");
-        } else if (playerHand == dealerHand) {
-            System.out.println("You tied! Good luck next time");
-        } else {
-            System.out.println("You won! Congrats");
+            gameState = 2;
         }
+
+        else if (playerHand == dealerHand)
+        {
+            System.out.println("You tied! Good luck next time");
+            gameState = 2;
+        }
+        else
+        {
+            System.out.println("You won! Congrats");
+            gameState = 3;
+        }
+
+        window.updateView();
     }
+
 
     public static int getGameState() {
         return gameState;

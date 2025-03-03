@@ -9,33 +9,40 @@ public class Viewer extends JFrame {
     private Image loss;
     private Image win;
 
+    private int lastCard;
+    private int roll1;
+    private int roll2;
+
     private Game game;
     
     public Viewer(Game game)
     {
 
         // Die faces
-        images = new Image[12];
-        images[0] = new ImageIcon("resources/die/blackdie1.png").getImage();
-        images[1] = new ImageIcon("resources/die/REDIE1.png").getImage();
-        images[2] = new ImageIcon("resources/die/blackdie2.png").getImage();
-        images[3] = new ImageIcon("resources/die/REDIE2.png").getImage();
-        images[4] = new ImageIcon("resources/die/blackdie3.png").getImage();
-        images[5] = new ImageIcon("resources/die/REDIE3.png").getImage();
-        images[6] = new ImageIcon("resources/die/blackdie4.png").getImage();
-        images[7] = new ImageIcon("resources/die/REDIE4.png").getImage();
-        images[8] = new ImageIcon("resources/die/blackdie5.png").getImage();
-        images[9] = new ImageIcon("resources/die/REDIE5.png").getImage();
-        images[10] = new ImageIcon("resources/die/blackdie6.png").getImage();
-        images[11] = new ImageIcon("resources/die/REDIE6.png").getImage();
 
+        images = new Image[6];
+        for (int i = 0; i < 6; i++) {
+            String path = "resources/die/blackdie" + (i + 1) + ".png";
+            System.out.println("Loading image: " + path);
+            images[i] = new ImageIcon(path).getImage();
+
+            if (images[i] == null) {
+                System.out.println("Error: Image not loaded for " + path);
+            }
+        }
         // Background Images
         homePage = new ImageIcon("resources/homepage.png").getImage();
         homePage = homePage.getScaledInstance(960, 540, Image.SCALE_SMOOTH);
 
         gamePlay = new ImageIcon("resources/gameplay.png").getImage();
-        win = new ImageIcon("resources/youwin.png").getImage();
+        gamePlay = gamePlay.getScaledInstance(960, 540, Image.SCALE_SMOOTH);
+
+        win = new ImageIcon("Resources/win.png").getImage();
+        win = win.getScaledInstance(960, 540, Image.SCALE_SMOOTH);
+
         loss = new ImageIcon("resources/youlose.png").getImage();
+        loss = loss.getScaledInstance(960, 540, Image.SCALE_SMOOTH);
+
 
 
         this.game = game;
@@ -49,21 +56,56 @@ public class Viewer extends JFrame {
     public void paint(Graphics g)
     {
 
-        if (Game.getGameState() == 0)
+        int state = Game.getGameState();
+
+        // Loops to determine current state of the game
+        if (state == 0)
         {
-            // Homescreen image
             g.drawImage(homePage, 0, 0, this);
         }
 
-        else if (Game.getGameState() == 1)
+        else if (state == 1)
         {
+
             g.drawImage(gamePlay, 0, 0, this);
         }
 
+        else if (state == 2)
+        {
+            g.drawImage(loss, 0, 0, this);
+        }
+
+        else if (state == 3)
+        {
+            g.drawImage(win, 0, 0, this);
+        }
+
+        // Draw dice only if game is active
+        if (state == 1)
+        {
+            System.out.println("in state roll 1:" + roll1 + " & roll2: " + roll2);
+            g.drawImage(images[roll1 - 1], 400, 250, this);
+            g.drawImage(images[roll2 - 1], 500, 250, this);
+        }
+
+
+    }
 
 
 
+    public void updateView(int newRoll1, int newRoll2)
+    {
+        this.roll1 = newRoll1;
+        this.roll2 = newRoll2;
 
+        System.out.println("Updating view: Roll1 = " + roll1 + ", Roll2 = " + roll2);
+
+        repaint();
+    }
+
+    public void updateView()
+    {
+        repaint();
     }
 
 }

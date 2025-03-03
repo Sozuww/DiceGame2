@@ -3,6 +3,8 @@ import java.util.Scanner;
 public class Player {
     private Scanner scanner;
     private int playerHand;
+    private static int lastCard;
+    Die d1 = new Die(6);
 
     public Player(){
         scanner = new Scanner(System.in);
@@ -27,10 +29,16 @@ public class Player {
         return scanner.nextInt();
     }
 
-    public int Hit() {
-        playerHand += Die.drawCard();
-        return playerHand;
+    public void Hit() {
+        lastCard = d1.roll();
+        playerHand += lastCard;
     }
+
+    public static int getLastRoll()
+    {
+        return lastCard;
+    }
+
 
     public int getHand()
     {

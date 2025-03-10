@@ -64,6 +64,8 @@ public class Game {
         Player player = new Player();
         Dealer dealer = new Dealer(player.getDifficulty());
 
+
+        System.out.println("Type PLAY when you're ready to play");
         while (!player.getPlayInput().equals("PLAY"))
         {
             // Loop until player inputs "PLAY"
@@ -73,17 +75,15 @@ public class Game {
         window.updateView(1, 1);
         boolean playing = true;
 
-
         while (playing) {
             displayGameState(player);
             if (getPlayerChoice() == 1) {
                 player.Hit();
-                roll1 = Player.getLastRoll();
+                roll1 = player.getLastRoll();
                 player.Hit();
-                roll2 = Player.getLastRoll();
+                roll2 = player.getLastRoll();
                 window.updateView(roll1, roll2);
                 playing = checkStatus(player.getHand());
-
             } else {
                 playing = false;
                 gameState = 2;

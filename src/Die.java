@@ -4,15 +4,18 @@ public class Die
     /** Instance Variables **/
 
     private int numSides;
+    private final Random random;
 
     /** Constructors **/
 
     public Die(int numSides) {
         this.numSides = numSides;
+        this.random = new Random();
     }
 
     public Die() {
         numSides = 6;
+        this.random = new Random();
     }
 
     /** Methods
@@ -20,7 +23,7 @@ public class Die
      */
 
     public int roll() {
-        return ((int) (1 + Math.random() * numSides));
+        return random.nextInt(numSides) + 1;
     }
 
     public static int drawCard()

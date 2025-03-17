@@ -3,12 +3,14 @@ import java.awt.*;
 
 public class Viewer extends JFrame {
 
+    // dont fully understand
     private GamePanel gamePanel;
     private Game game;
 
     public Viewer(Game game)
     {
         this.game = game;
+        // dont fully understand
         this.gamePanel = new GamePanel();
 
         this.setTitle("Black Jack");
@@ -20,15 +22,17 @@ public class Viewer extends JFrame {
 
     public void updateView(int newRoll1, int newRoll2)
     {
+        // dont fully understand
         gamePanel.updateDice(newRoll1, newRoll2);
     }
 
     public void updateView()
     {
+        // dont fully understand
         gamePanel.repaint();
     }
 
-    // Inner class for custom painting
+    // dont fully understand
     private class GamePanel extends JPanel
     {
         private Image[] images;
@@ -41,7 +45,8 @@ public class Viewer extends JFrame {
 
         public GamePanel()
         {
-            setDoubleBuffered(true);  // Enable double buffering
+            // dont fully understand
+            setDoubleBuffered(true);
 
             // Load die faces
             images = new Image[6];
@@ -79,8 +84,11 @@ public class Viewer extends JFrame {
             this.roll2 = newRoll2;
             repaint();
         }
-
+        // dont fully understand
         @Override
+
+        // dont fully understand "protected"
+
         protected void paintComponent(Graphics g)
         {
             super.paintComponent(g);
